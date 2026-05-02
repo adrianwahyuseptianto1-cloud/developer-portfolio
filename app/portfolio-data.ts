@@ -27,12 +27,16 @@ export const profile = {
   headline: {
     line1: "Custom systems",
     line2: "yang rapi dari",
-    italic: "request liar."
+    italic: "request nyata."
   },
   shortBio:
-    "Programmer asal Indonesia. Suka membuat program baru, custom program by request, dan full stack dev yang turun dari backend sampai tombolnya enak dipakai.",
+    "Programmer asal Surabaya. Fokus membangun custom program by request dan full stack system yang turun dari backend sampai interface yang enak dipakai.",
+  shortBioEn:
+    "Programmer from Surabaya. Focused on request-driven custom programs and full-stack systems, from backend logic to interfaces that feel easy to use.",
   bio:
     'Saya membangun <em>custom software</em> di titik temu antara kebutuhan lapangan, backend logic, dan interface yang tidak bikin operator tersesat. Fokus saya sekarang: membuat system by request, dari dashboard admin, automation, scraper, bot, mobile app, sampai web yang siap <b>di-deploy</b> dan dipakai.',
+  bioEn:
+    'I build <em>custom software</em> where real operational needs meet backend logic and interfaces that do not confuse the people using them. My current focus is request-based system development: admin dashboards, automation, scrapers, bots, mobile apps, and web platforms that are ready to <b>deploy</b> and use.',
   facts: [
     ["based in", "Surabaya, ID"],
     ["experience", "1 year"],
@@ -52,8 +56,8 @@ export const profile = {
 export const stack = {
   Languages: ["JavaScript", "TypeScript", "PHP", "SQL", "Lua"],
   Frameworks: ["Next.js", "React", "Laravel", "Express", "Expo"],
-  "Infra & Data": ["SQLite", "MongoDB", "Firebase", "Vercel", "Socket.IO"],
-  "Tools & Craft": ["Codex", "Antigravity", "Git", "Puppeteer", "ExcelJS"]
+  "Infra & Data": ["SQLite", "MongoDB", "Firebase", "Socket.IO"],
+  "Tools & Craft": ["Codex", "Antigravity", "Git"]
 };
 
 export const works: Work[] = [
@@ -75,7 +79,7 @@ export const works: Work[] = [
     year: "2026",
     title: "Company Tools Hub",
     description: "Unified Node.js tools hub for procurement snapshots, sales logs, WhatsApp automation, and scheduled jobs.",
-    tags: ["NODE", "SOCKET.IO", "PUPPETEER", "EXCELJS"],
+    tags: ["NODE", "SOCKET.IO", "AUTOMATION", "EXPORT"],
     source: "Project/Tools kebutuhan kantor",
     demo: {
       mode: "automation monitor",

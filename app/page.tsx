@@ -6,8 +6,23 @@ import { marquee, profile, stack, works } from "./portfolio-data";
 
 export default function Home() {
   const [activeWork, setActiveWork] = useState(0);
+  const [language, setLanguage] = useState<"id" | "en">("id");
   const time = useLocalTime(profile.timezone);
   const totalStack = Object.values(stack).reduce((sum, items) => sum + items.length, 0);
+  const copy = getCopy(language);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem("portfolio-language");
+    if (stored === "id" || stored === "en") setLanguage(stored);
+  }, []);
+
+  const toggleLanguage = () => {
+    setLanguage((value) => {
+      const next = value === "id" ? "en" : "id";
+      window.localStorage.setItem("portfolio-language", next);
+      return next;
+    });
+  };
 
   return (
     <main>
@@ -23,14 +38,21 @@ export default function Home() {
       </section>
 
       <header className="site-header">
-        <a href="#top" className="logo">
-          {profile.initials}
-          <span>.</span>
-        </a>
+        <div className="brand-tools">
+          <a href="#top" className="logo">
+            {profile.initials}
+            <span>.</span>
+          </a>
+          <button className="language-switch" onClick={toggleLanguage} aria-label="Switch language">
+            <span className={language === "id" ? "active" : ""}>ID</span>
+            <i />
+            <span className={language === "en" ? "active" : ""}>EN</span>
+          </button>
+        </div>
         <nav aria-label="Primary navigation">
-          <a href="#about"><span>01</span> about</a>
+          <a href="#about"><span>01</span> {copy.nav.about}</a>
           <a href="#stack"><span>02</span> stack</a>
-          <a href="#works"><span>03</span> works</a>
+          <a href="#works"><span>03</span> {copy.nav.works}</a>
           <a href="#contact"><span>04</span> contact</a>
         </nav>
       </header>
@@ -40,18 +62,18 @@ export default function Home() {
           <div>
             <p className="eyebrow">portfolio - 2026</p>
             <h1>
-              {profile.headline.line1}
+              {copy.headline.line1}
               <br />
-              {profile.headline.line2}
+              {copy.headline.line2}
               <br />
-              <em>{profile.headline.italic}</em>
+              <em>{copy.headline.italic}</em>
             </h1>
-            <p className="hero-sub">{profile.shortBio}</p>
+            <p className="hero-sub">{copy.shortBio}</p>
           </div>
 
           <dl className="hero-meta">
             <div>
-              <dt>// name</dt>
+              <dt>// {copy.meta.name}</dt>
               <dd>{profile.name}</dd>
             </div>
             <div>
@@ -87,11 +109,11 @@ export default function Home() {
         </aside>
       </section>
 
-      <SectionLabel id="about" num="01" label="About" right="Scroll down" />
+      <SectionLabel id="about" num="01" label={copy.nav.about} right={copy.scroll} />
       <section className="about">
-        <div className="about-bio" dangerouslySetInnerHTML={{ __html: profile.bio }} />
+        <div className="about-bio" dangerouslySetInnerHTML={{ __html: copy.bio }} />
         <div className="about-facts">
-          {profile.facts.map(([key, value]) => (
+          {copy.facts.map(([key, value]) => (
             <dl key={key} className="fact">
               <dt>{key}</dt>
               <dd>{value}</dd>
@@ -114,7 +136,7 @@ export default function Home() {
         ))}
       </section>
 
-      <SectionLabel id="works" num="03" label="Selected Works" right={`${works.length} demos`} />
+      <SectionLabel id="works" num="03" label={copy.worksLabel} right={`${works.length} demos`} />
       <section className="works">
         {works.map((work, index) => (
           <Link
@@ -137,20 +159,20 @@ export default function Home() {
         ))}
       </section>
 
-      <SectionLabel id="now" num="04" label="Currently" />
+      <SectionLabel id="now" num="04" label={copy.nowLabel} />
       <section className="now">
-        <div className="now-mark">now<span>.</span></div>
+        <div className="now-mark">{language === "id" ? "kini" : "now"}<span>.</span></div>
         <ul>
-          {profile.now.map((item) => <li key={item}>{item}</li>)}
+          {copy.now.map((item) => <li key={item}>{item}</li>)}
         </ul>
       </section>
 
-      <SectionLabel id="contact" num="05" label="Get in touch" />
+      <SectionLabel id="contact" num="05" label={copy.contactLabel} />
       <section className="contact">
         <h2>
-          Let&apos;s <em>build</em>
+          {copy.contactHeadline.before} <em>{copy.contactHeadline.accent}</em>
           <br />
-          something good.
+          {copy.contactHeadline.after}
         </h2>
         <div className="contact-grid">
           <div>
@@ -172,10 +194,67 @@ export default function Home() {
 
       <footer>
         <span>© 2026 {profile.name}. All rights / no rights.</span>
-        <span>BUILD 2026.04.30 · handcrafted, no template</span>
       </footer>
     </main>
   );
+}
+
+function getCopy(language: "id" | "en") {
+  if (language === "en") {
+    return {
+      nav: { about: "about", works: "works" },
+      headline: { line1: "Custom systems", line2: "built from", italic: "real requests." },
+      shortBio: profile.shortBioEn,
+      bio: profile.bioEn,
+      scroll: "Scroll down",
+      meta: { name: "name" },
+      facts: [
+        ["based in", "Surabaya, ID"],
+        ["experience", "1 year"],
+        ["focus", "Request-based systems"],
+        ["education", "Self-directed software engineering"],
+        ["languages", "Bahasa / English"],
+        ["open to", "Remote, Hybrid"]
+      ],
+      worksLabel: "Selected Works",
+      nowLabel: "Currently",
+      now: [
+        "Refining office automation: dashboards, WhatsApp flow, Excel export",
+        "Learning better deployment, SEO, and public repository storytelling",
+        "Maintaining request-based internal tools for reporting, monitoring, and daily office workflows",
+        "Improving scraper and automation pipelines so repeated data work can run with cleaner logs and safer exports"
+      ],
+      contactLabel: "Get in touch",
+      contactHeadline: { before: "Let's", accent: "build", after: "something good." }
+    };
+  }
+
+  return {
+    nav: { about: "tentang", works: "karya" },
+    headline: { line1: "Custom system", line2: "rapi dari", italic: "request nyata." },
+    shortBio: profile.shortBio,
+    bio: profile.bio,
+    scroll: "Gulir turun",
+    meta: { name: "nama" },
+    facts: [
+      ["berbasis di", "Surabaya, ID"],
+      ["pengalaman", "1 tahun"],
+      ["fokus", "System by request"],
+      ["edukasi", "Self-directed software engineering"],
+      ["bahasa", "Bahasa / English"],
+      ["terbuka untuk", "Remote, Hybrid"]
+    ],
+    worksLabel: "Project Pilihan",
+    nowLabel: "Sedang Berjalan",
+    now: [
+      "Merapikan office automation: dashboard, alur WhatsApp, dan export Excel",
+      "Memperdalam deployment, SEO, dan cara menata repository publik yang lebih jelas",
+      "Menjaga internal tools berbasis request untuk laporan, monitoring, dan workflow harian kantor",
+      "Meningkatkan pipeline scraper dan automation agar log lebih bersih dan export lebih aman"
+    ],
+    contactLabel: "Hubungi",
+    contactHeadline: { before: "Mari", accent: "bangun", after: "system yang berguna." }
+  };
 }
 
 function SectionLabel({ id, num, label, right }: { id: string; num: string; label: string; right?: string }) {
